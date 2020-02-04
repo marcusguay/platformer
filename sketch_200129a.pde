@@ -2,6 +2,7 @@ import fisica.*;
 FBox platform, player1;
 FBomb bomb=null;
 color black = #000000;
+color green=#0ed145;
 PImage map;
 int x=0;
 int y=0;
@@ -20,10 +21,7 @@ void setup() {
   map=loadImage("map.png");
 
 
-player1= new FBox(gridsize,gridsize);
-player1.setFill(0);
-player1.setPosition(0,0);
-world.add(player1);
+
 
   while (y < map.height) {
 
@@ -33,12 +31,23 @@ world.add(player1);
 
 
     if ( c == black) {
-      FBox platform = new FBox(gridsize, gridsize);
-      platform.setFill(black);
-      platform.setPosition(x*gridsize, y*gridsize);
-      platform.setStatic(true);
-      world.add(platform);
+      FBox b = new FBox(gridsize, gridsize);
+      b.setFill(black);
+b.setPosition(x*gridsize, y*gridsize);
+   b.setStatic(true);
+      world.add(b);
+      boxes.add(b);
     }
+    
+       if ( c == green) {
+      FBox jumppad = new FBox(gridsize, gridsize);
+      jumppad.setFill(green);
+jumppad.setPosition(x*gridsize, y*gridsize);
+   jumppad.setStatic(true);
+      world.add(jumppad);
+      boxes.add(jumppad);
+    }
+    
 
     x++;
 
@@ -46,7 +55,15 @@ world.add(player1);
       x=0;
       y++;
     }
-  }
+ 
+
+
+
+}
+player1= new FBox(gridsize,gridsize);
+player1.setFill(#001BFF);
+player1.setPosition(0,0);
+world.add(player1);
 }
 
 
