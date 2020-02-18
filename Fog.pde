@@ -1,6 +1,7 @@
 class Fog{
   float x,y,w,h,b;
-  float tfogx,tfgy;
+
+  float tfogx,tfogy;
   Fog(){
     x=fogx;
     y=fogy;
@@ -21,8 +22,9 @@ popMatrix();
 }
 
 void act(){
-
-  b=dist(player1.getX(),player1.getY(),player1.getX()-x,player1.getY()-y)/6.25;
+tfogx=x;
+tfogy=y;
+  b=dist(tfogx,tfogy,player1.getX(),player1.getY());
 if(b>250){
   b=255;}
 
