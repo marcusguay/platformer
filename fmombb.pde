@@ -1,12 +1,13 @@
 class FBomb extends FCircle {
 
   int timer;
-
+ float p1d;
   FBomb() {
     super(35);
     timer = 60;
     this.setFill(0);
-    this.setPosition(player1.getX(), player1.getY() - gridsize);
+    p1d=player1.getX()+gridsize*p1direction;
+    this.setPosition(p1d, player1.getY());
     world.add(this);
   }
 

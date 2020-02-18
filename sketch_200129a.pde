@@ -6,20 +6,42 @@ color green=#0ed145;
 PImage map;
 int x=0;
 int y=0;
+int p,k;
+int l=0;
 float vx,vy;
+int fogx=0, fogy=-height*3;
 int gridsize=50;
 boolean wkey, akey, skey, dkey,qkey,ekey;
 boolean ukey,rkey,lkey,dnkey,uukey,okey;
 FWorld world;
+int p1direction=-1;
+ArrayList<Fog> fog;
 ArrayList<FBox> boxes= new ArrayList<FBox>();
 void setup() {
+ 
   size(600, 600);
   Fisica.init(this);
   world = new FWorld(0,0,10000,10000);
   world.setGravity(0, 980);
-  
+  p=70000;
+  k=3;
+  fog=new ArrayList<Fog>();
   map=loadImage("map.png");
 
+int j=0;
+while(j < 70000){
+  fog.add(new Fog());
+  fogx = fogx + k;
+  
+  if(fogx>=width/2 + 50){
+   fogx=-width/2 - 50;
+   fogy=fogy+2;
+    
+    
+  }
+  
+ j=j+1; 
+}
 
 
 
@@ -68,7 +90,8 @@ world.add(player1);
 
 
 void draw() {
-  background(255);
+   background(#E3E3E3);
+  println(p1direction);
   translate(-player1.getX() + width/2 ,-player1.getY()+height/2);
   pushMatrix();
   world.step();
@@ -76,9 +99,17 @@ void draw() {
   popMatrix();
   vx=0;
   
-  if(akey) vx=-500;
-  if(dkey) vx=500;
+  if(akey){ vx=-500; p1direction=-1;}
+  if(dkey){ vx=500; p1direction=1;}
+
   player1.setVelocity(vx,player1.getVelocityY());
+  
+  l=0;
+  while (l < p) {
+    Fog f = fog.get(l); 
+   f.show();
+   f.act();
+    l=l+1;}
   
   if(qkey && bomb==null){
     bomb= new FBomb();
@@ -90,6 +121,17 @@ void draw() {
   
   ArrayList<FContact> contacts =player1.getContacts();
   if(wkey&& contacts.size() > 0) player1.setVelocity(player1.getVelocityX(), -500);
+for(FContact p : contacts){
+  if(p.contains(platform)){
+    
+    
+    
+  }
+  
+  
+  
+}
+
 }
 
 public void keyPressed() {
