@@ -25,11 +25,23 @@ class Fog {
     translate(player1.getX(), player1.getY());
     tfogx=x;
     tfogy=y;
-    b=dist(x, y, 0, 0);
-    if(b<200) {b=10;}
-     if((b>200)&&(b<205)){
-     b=85;
-   }
+    
+    if(dist(x, y, 0, 0)/3.5 > 0){
+      b=dist(x, y, 0, 0)/3.5;
+    }
+    
+
+    
+    
+    
+    
+   // if(b<150) {b=10;}
+    // if((b>150)&&(b<175)){
+   //  b=50;
+ //  }
+   // if((b>175)&&(b<205)){
+   //  b=85;
+  // }
     if (b>205) {
       b=255;
     }

@@ -1,16 +1,22 @@
 import fisica.*;
 FBox platform, player1;
 FBomb bomb=null;
+FBullet bullet;
 color black = #000000;
-color green=#0ed145;
+ArrayList<wall> wall;
+color brown=#5c290e;
+color orange=#ff5805;
 PImage map;
 int x=0;
 int y=0;
 int p, k;
 int l=0;
+int m=0;
 float vx, vy;
+int cd;
 int fogx=0, fogy=-height*4;
 int gridsize=50;
+ 
 boolean wkey, akey, skey, dkey, qkey, ekey;
 boolean ukey, rkey, lkey, dnkey, uukey, okey;
 FWorld world;
@@ -23,8 +29,9 @@ void setup() {
   Fisica.init(this);
   world = new FWorld(0, 0, 10000, 10000);
   world.setGravity(0, 980);
-  p=70000;
-  k=5;
+  p=25000;
+  k=10;
+ wall=new ArrayList<wall>();
   fog=new ArrayList<Fog>();
   map=loadImage("map.png");
 
@@ -52,21 +59,29 @@ void setup() {
 
     if ( c == black) {
       FBox b = new FBox(gridsize, gridsize);
-      b.setFill(black);
+      b.setFill(0,0,0);
       b.setPosition(x*gridsize, y*gridsize);
       b.setStatic(true);
       world.add(b);
       boxes.add(b);
     }
 
-    if ( c == green) {
-      FBox jumppad = new FBox(gridsize, gridsize);
-      jumppad.setFill(green);
-      jumppad.setPosition(x*gridsize, y*gridsize);
-      jumppad.setStatic(true);
-      world.add(jumppad);
-      boxes.add(jumppad);
+
+    if ( c == orange) {
+wall.add(new wall(x*gridsize,y*gridsize));
     }
+    
+    
+    if ( c == brown) {
+      FBox b = new FBox(gridsize, gridsize);
+      b.setFill(111,13,13);
+      b.setStroke(111,13,13);
+      b.setPosition(x*gridsize, y*gridsize);
+      b.setStatic(true);
+      world.add(b);
+      boxes.add(b);
+    }
+   
 
 
     x++;
@@ -77,7 +92,7 @@ void setup() {
     }
   }
   player1= new FBox(gridsize, gridsize);
-  player1.setFill(#001BFF);
+  player1.setFill(#FF1717);
   player1.setPosition(0, 0);
   world.add(player1);
 }
@@ -85,7 +100,7 @@ void setup() {
 
 void draw() {
   background(#E3E3E3);
-  println(p1direction);
+println(player1.getX(),player1.getY());
 
   pushMatrix();
   translate(-player1.getX() + width/2, -player1.getY()+height/2);
@@ -98,6 +113,8 @@ void draw() {
     f.act();
     l=l+1;
   }
+  
+
 
   popMatrix();
   vx=0;
@@ -114,12 +131,20 @@ void draw() {
   player1.setVelocity(vx, player1.getVelocityY());
 
   l=0;
-
+cd=cd-1;
 
   if (qkey && bomb==null) {
     bomb= new FBomb();
-  }
-
+    }
+  
+  if(ekey && cd<0){
+    bullet= new FBullet();
+    bullet.act();
+    cd=5;
+   }
+   
+     if (bullet != null) bullet.act();
+   
   if (bomb != null) bomb.act();
 
 
