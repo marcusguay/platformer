@@ -10,6 +10,7 @@ PImage map;
 int x=0;
 int y=0;
 int p, k;
+int b;
 int l=0;
 int j;
 int m;
@@ -104,7 +105,9 @@ wall.add(new wall(x*gridsize,y*gridsize));
   bridge=new FBox(gridsize*9,gridsize);
     bridge.setFill(173,82,30);
     bridge.setDensity(10);
-    enemy.add(enemy(100,100));
+  
+    
+    enemy.add(new enemy(1130,900));
     
   bridge.setPosition(360, 900);
  world.add(bridge);
@@ -114,10 +117,18 @@ wall.add(new wall(x*gridsize,y*gridsize));
 
 void draw() {
   background(#E3E3E3);
-//println(player1.getX(),player1.getY());
+println(player1.getX(),player1.getY());
 
   pushMatrix();
+ b=0;
+if(b< enemy.size()){
+ enemy e =enemy.get(b);
+ e.show();
+ e.act();
+  b++;
   
+  
+}
 
   translate(-player1.getX() + width/2, -player1.getY()+height/2);
     while (l < p) {
