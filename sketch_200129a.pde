@@ -1,5 +1,5 @@
 import fisica.*;
-FBox platform, player1;
+FBox platform, player1, bridge;
 FBomb bomb=null;
 FBullet bullet;
 color black = #000000;
@@ -11,7 +11,8 @@ int x=0;
 int y=0;
 int p, k;
 int l=0;
-int m=0;
+int j;
+int m;
 float vx, vy;
 int cd;
 int fogx=0, fogy=-height*4;
@@ -23,6 +24,7 @@ FWorld world;
 int p1direction=-1;
 ArrayList<Fog> fog;
 ArrayList<FBox> boxes= new ArrayList<FBox>();
+ArrayList<enemy> enemy;
 void setup() {
 
   size(600, 600);
@@ -30,7 +32,9 @@ void setup() {
   world = new FWorld(0, 0, 10000, 10000);
   world.setGravity(0, 980);
   p=25000;
+  j=10000;
   k=10;
+  enemy=new ArrayList<enemy>();
  wall=new ArrayList<wall>();
   fog=new ArrayList<Fog>();
   map=loadImage("map.png");
@@ -63,12 +67,13 @@ void setup() {
       b.setPosition(x*gridsize, y*gridsize);
       b.setStatic(true);
       world.add(b);
-      boxes.add(b);
+     // boxes.add(b);
     }
 
 
     if ( c == orange) {
 wall.add(new wall(x*gridsize,y*gridsize));
+
     }
     
     
@@ -95,26 +100,44 @@ wall.add(new wall(x*gridsize,y*gridsize));
   player1.setFill(#FF1717);
   player1.setPosition(0, 0);
   world.add(player1);
+  
+  bridge=new FBox(gridsize*9,gridsize);
+    bridge.setFill(173,82,30);
+    bridge.setDensity(10);
+    enemy.add(enemy(100,100));
+    
+  bridge.setPosition(360, 900);
+ world.add(bridge);
+  
 }
 
 
 void draw() {
   background(#E3E3E3);
-println(player1.getX(),player1.getY());
+//println(player1.getX(),player1.getY());
 
   pushMatrix();
-  translate(-player1.getX() + width/2, -player1.getY()+height/2);
-  world.step();
-  world.draw();
+  
 
-  while (l < p) {
+  translate(-player1.getX() + width/2, -player1.getY()+height/2);
+    while (l < p) {
     Fog f = fog.get(l); 
     f.show();
     f.act();
     l=l+1;
   }
-  
+   m=0;
+    while (m < 0) {
+    wall d = wall.get(m); 
+    d.show();
+    d.act();
+    m=m+1;
+  }
+  world.step();
+  world.draw();
 
+
+  
 
   popMatrix();
   vx=0;
@@ -129,7 +152,7 @@ println(player1.getX(),player1.getY());
   }
 
   player1.setVelocity(vx, player1.getVelocityY());
-
+ 
   l=0;
 cd=cd-1;
 
@@ -140,14 +163,14 @@ cd=cd-1;
   if(ekey && cd<0){
     bullet= new FBullet();
     bullet.act();
-    cd=5;
+    cd=10;
    }
    
-     if (bullet != null) bullet.act();
+  if (bullet!= null)   bullet.act();
    
   if (bomb != null) bomb.act();
 
-
+bridge.setVelocity(1,0);
   ArrayList<FContact> contacts =player1.getContacts();
   if (wkey&& contacts.size() > 0) player1.setVelocity(player1.getVelocityX(), -500);
   for (FContact p : contacts) {
