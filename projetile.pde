@@ -2,6 +2,7 @@ class FBullet extends FCircle{
    float p1d;
    int timer=10;
   
+  
   FBullet(){
     super(10);
      this.setFill(0);
@@ -18,8 +19,13 @@ class FBullet extends FCircle{
   
   
   void act() {
+    int j=0;
+    if(j==0){
+      j++;
    this.addImpulse(p1direction*1000,0);
-    println(timer);
+   
+    }
+    //println(timer);
    timer--;
    if (timer<0) {
    
@@ -27,6 +33,10 @@ class FBullet extends FCircle{
    bullet=null;
    timer=10;
     }
+   
+    
+    
+    
   }
   
-}  
+} 

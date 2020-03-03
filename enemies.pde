@@ -1,4 +1,4 @@
-class enemy extends FCircle {
+ class enemy extends FCircle {
   int ex, ey, size;
   int jump;
   int timer;
@@ -6,18 +6,16 @@ class enemy extends FCircle {
   int directionchangecd;
   float acceleration;
   float direction;
-  enemy() {
-    super(35);
-  }
-
+ int lives;
 
 
   enemy(int posx, int posy) {
-    super(35);
-    ex=posx;
+super(35); 
+  lives=3;; ex=posx;
     ey=posy;
     this.setPosition(ex, ey);
     timer=10;
+    
     world.add(this);
   } 
 
@@ -26,34 +24,27 @@ class enemy extends FCircle {
 
 
   void act() {
-    println(cd);
-    if (dist(player1.getX(), player1.getY(), this.getX(), this.getY())< 300) {
-      this.setVelocity(direction, -(jump*acceleration));
 
+   
 
-      if (timer<0) {
-        direction=(player1.getX()-this.getX());
+    int i=0;
+    ArrayList<FContact> contacts =this.getContacts();
+    for (FContact p : contacts) {
+
+      if (p.contains(bullet)) {
+      
+        lives=lives-1;
+        if (lives<=0){
+          
+          coin= new coin(this.getX(),this.getY());
+          coin.act();
+            world.remove(this);  
       }
-    }
-    cd--;
-    timer--;
-    if (timer==0) {
-      cd=10;
-    }
-    if (timer<0) {
-      jump=5;
-     
-      acceleration++;
-      if (cd<0) {
+    }}
+  }
 
-        timer=50;
-      }
-    } else { 
-      jump=-5;
-    
-      acceleration--;
-    }
-  }  
+
+
 
 
   void show() {
