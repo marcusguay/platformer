@@ -3,9 +3,16 @@ FBox platform, player1, bridge;
 FBomb bomb=null;
 FBullet bullet;
 coin coin;
-
+boolean shop;
+int shoppage;
+PImage[] BatSprites;
+PImage[] BatIdle;
+PImage[] BatcurrentAction;
+int BatcostumeNum=0;
+int frame=0;
 int coins;
-FBlob Lava,Lava2;
+float brightness;
+FBlob Lava, Lava2;
 color black = #000000;
 ArrayList<wall> wall;
 ArrayList<coin> Fcoin;
@@ -17,10 +24,13 @@ int x=0;
 int y=0;
 int p, k;
 int b;
+float bullx,bully;
 int l=0;
 int j;
-
+int shoptimer;
+int nbullets;
 int m;
+boolean lightlocation;
 float vx, vy;
 int cd;
 int fogx=0, fogy=-height*4;
@@ -34,8 +44,9 @@ ArrayList<Fog> fog;
 ArrayList<FBox> boxes= new ArrayList<FBox>();
 ArrayList<enemy> enemy;
 void setup() {
- frameRate(60);
+  frameRate(60);
   size(600, 600);
+  brightness=1;
   Fisica.init(this);
   world = new FWorld(0, 0, 10000, 10000);
   world.setGravity(0, 980);
@@ -43,7 +54,8 @@ void setup() {
   j=10000;
   k=10;
   coins=0;
-  
+  lightlocation=false;
+ nbullets=10;
   Fcoin = new ArrayList<coin>();
   FBullet=new ArrayList<FBullet>();
   enemy=new ArrayList<enemy>();
@@ -86,16 +98,13 @@ void setup() {
     if ( c == red) {
 
 
-     Lava= new FBlob();
-     Lava.setAsCircle(x*gridsize, (y*gridsize), 100,110);
-     Lava.setDamping(0.000001);
-     Lava.setDensity(1);
+      Lava= new FBlob();
+      Lava.setAsCircle(x*gridsize, (y*gridsize), 100, 110);
+      Lava.setDamping(0.000001);
+      Lava.setDensity(1);
       Lava.setFill(0, 0, 0);
       Lava.setStatic(false);
       world.add(Lava);
-      
-      
-      
     }
 
 
@@ -123,9 +132,20 @@ void setup() {
       y++;
     }
   }
+
+
+
+
+
+
+
+
+
+
+
   player1= new FBox(gridsize, gridsize);
   player1.setFill(#FF1717);
-  player1.setPosition(100, 100);
+  player1.setPosition(2600, 390);
   player1.setDensity(100);
   world.add(player1);
 
@@ -139,7 +159,7 @@ void setup() {
   enemy.add(new enemy(1130, 900));
 
 
-enemy.add(new bat(1570, 1200));
+  enemy.add(new bat(1770, 1200));
 
 
 
@@ -151,32 +171,27 @@ enemy.add(new bat(1570, 1200));
 
 void draw() {
   background(#E3E3E3);
-  println(player1.getX(), player1.getY());
+  //println(player1.getX(), player1.getY());
 
+  animations();
+//println(brightness);
 
-  
   pushMatrix();
   int b=0;
-  if (b < enemy.size()) {
+  while (b < enemy.size()) {
     enemy e =enemy.get(b);
     e.show();
     e.act();
-    if(e.lives<=0){
+    if (e.lives<=0) {
       enemy.remove(b);
-      
-    } else{
-    b++;
-  }
+    } else {
+      b++;
+    }
   }
   translate(-player1.getX() + width/2, -player1.getY()+height/2);
-  while (l < p) {
-    Fog f = fog.get(l); 
-    f.show();
-    f.act();
-    l=l+1;
-  }
+ 
   m=0;
-  while (m < 0) {
+  while (m < 12) {
     wall d = wall.get(m); 
     d.show();
     d.act();
@@ -185,11 +200,88 @@ void draw() {
   world.step();
   world.draw();
 
-
-
+ while (l < p) {
+    Fog f = fog.get(l); 
+    f.show();
+    f.act();
+    l=l+1;
+  }
 
   popMatrix();
   vx=0;
+  
+  
+  if(lightlocation==true){
+   if(brightness < 10){
+  
+  brightness=brightness+0.5;
+  
+} 
+    
+    
+    
+  } else {
+    
+    if(brightness > 1){
+      brightness=brightness-0.5;
+      
+    }
+    
+    
+  }
+
+
+  if (player1.getX()>2490 &&  player1.getX()<2749) {
+
+    if (player1.getY()<410 &&  player1.getY()>250) {
+      //println("loll");
+
+lightlocation=true;
+
+
+
+      if (okey&&shoptimer<0) {
+
+        if (shop==false) {
+          shoptimer=10;
+          shop=true;
+        } else { 
+          shop=false;
+          shoptimer=10;
+        }
+      }
+    }
+  } else {
+    shop=false;
+    lightlocation=false;
+  }
+
+  if (shop==true) {
+    fill(255);
+    rect(300, 300, 500, 500);
+    fill(0);
+    textSize(26);
+    text("Shop",250,100);
+    fill(255);
+    stroke(0);
+    rect(157,150,100,40);
+        fill(0);
+          textSize(20);
+    text("Weapons",110,150);
+    
+      
+      
+      
+      
+    
+    
+    
+    
+    
+    
+    
+  }
+shoptimer--;
 
   if (akey) { 
     vx=-500; 
@@ -205,26 +297,32 @@ void draw() {
   l=0;
   cd=cd-1;
 
+
+
+
   if (qkey && bomb==null) {
     bomb= new FBomb();
   }
 
-  if (ekey && cd<0) {
-        
+  if (ekey && cd<0 && nbullets>0) {
+
     bullet= new FBullet();
     bullet.act();
     cd=10;
+    nbullets--;
   }
 
-    if (coin!= null)   coin.act();
+  if (coin!= null)   coin.act();
 
   if (bullet!= null)   bullet.act();
 
   if (bomb != null) bomb.act();
-  
+
   fill(255);
-text("Coins"+coins,500,100);
+  text("Coins"+coins, 500, 100);
+  text("Bullets"+nbullets,500,200);
   bridge.setVelocity(1, 0);
+ 
   ArrayList<FContact> contacts =player1.getContacts();
   if (wkey&& contacts.size() > 0) player1.setVelocity(player1.getVelocityX(), -500);
   for (FContact p : contacts) {
@@ -264,4 +362,9 @@ public void keyReleased() {
   if (key=='i'|| key=='I') ukey = false;
   if (key=='u'|| key=='U') uukey = false;
   if (key=='o'|| key=='O') okey = false;
+}
+
+
+void mouseReleased() {
+  println(mouseX,mouseY);
 }

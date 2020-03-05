@@ -1,7 +1,7 @@
 class FBullet extends FCircle{
    float p1d;
    int timer=10;
-  
+   
   
   FBullet(){
     super(10);
@@ -19,6 +19,8 @@ class FBullet extends FCircle{
   
   
   void act() {
+   bullx=bullet.getX();
+  bully=bullet.getY();
     int j=0;
     if(j==0){
       j++;
